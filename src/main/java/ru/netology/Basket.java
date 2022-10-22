@@ -1,10 +1,8 @@
 package ru.netology;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 
-public class Basket {
+public class Basket implements Serializable {
     private String[] products;
     private int[] prices;
     private int[] counts;
@@ -23,7 +21,7 @@ public class Basket {
 
     public void addToCart(int productNum, int amount) {
         counts[productNum] += amount;
-        System.out.println(products[productNum] + " " + counts[productNum] + " шт " + prices[productNum] + " р/шт");
+        System.out.println(products[productNum] + " " + counts[productNum] + " шт по " + prices[productNum] + " р/шт");
     }
 
     public void printCart() {
@@ -55,6 +53,15 @@ public class Basket {
                 writer.print(count + " ");
             }
         } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void saveBin(File file){
+        try(
+          ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(file));
+           ){
+            writer.writeObject(new Basket(products,prices,counts));
+        }catch(IOException e){
             System.out.println(e.getMessage());
         }
     }
