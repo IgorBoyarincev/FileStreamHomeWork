@@ -65,6 +65,29 @@ public class Basket implements Serializable {
             System.out.println(e.getMessage());
         }
     }
+    public void load(File file,String[] products,int[]prices,int[]counts){
+        //String[]products;
+        //int[]prices;
+        //int[]counts;
+        try(
+            BufferedReader reader=new BufferedReader(new FileReader(file));
+           ){
+            products=reader.readLine().split(" ");
+            String[]priceStr=reader.readLine().trim().split("");
+            prices=new int[priceStr.length];
+            for(int i=0;i<prices.length;i++){
+                prices[i]=Integer.parseInt(priceStr[i]);
+            }
+            String[]countStr=reader.readLine().trim().split(" ");
+            counts=new int[countStr.length];
+            for (int i=0;i<counts.length;i++){
+                counts[i]=Integer.parseInt(countStr[i]);
+            }
+            //Basket basket=new Basket(products,prices,counts);
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     public String[] getProducts() {
         return products;

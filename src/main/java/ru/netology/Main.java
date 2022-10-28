@@ -39,7 +39,7 @@ public class Main {
 
 
     public static Basket loadFromTxtFile(File textFile) {
-        String[] products;
+        String[] products=null;
         int[] prices;
         int[] counts;
         Basket basket = null;
@@ -57,6 +57,7 @@ public class Main {
             for (int i = 0; i < counts.length; i++) {
                 counts[i] = Integer.parseInt(countStr[i]);
             }
+            //basket.load(textFile,products,prices,counts);
             basket = new Basket(products, prices, counts);
             basket.printCart();
         } catch (IOException e) {
