@@ -56,12 +56,53 @@ public class Basket implements Serializable {
             System.out.println(e.getMessage());
         }
     }
-    public void saveBin(File file){
-        try(
-          ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(file));
-           ){
-            writer.writeObject(new Basket(products,prices,counts));
-        }catch(IOException e){
+
+    public void saveBin(File file) {
+        try (
+                ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file));
+        ) {
+            writer.writeObject(new Basket(products, prices, counts));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static Basket loadFromTxtFile(File textFile) {
+        String[] products;
+        int[] prices;
+        int[] counts;
+        Basket basket = null;
+        try (
+                BufferedReader reader = new BufferedReader(new FileReader(textFile));
+        ) {
+            products = reader.readLine().split(" ");
+            String[] priceStr = reader.readLine().trim().split(" ");
+            prices = new int[priceStr.length];
+            for (int i = 0; i < prices.length; i++) {
+                prices[i] = Integer.parseInt(priceStr[i]);
+            }
+            String[] countStr = reader.readLine().trim().split(" ");
+            counts = new int[countStr.length];
+            for (int i = 0; i < counts.length; i++) {
+                counts[i] = Integer.parseInt(countStr[i]);
+            }
+            basket = new Basket(products, prices, counts);
+            basket.printCart();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return basket;
+    }
+
+    public static void loadFromBinFile(File file) {
+        try (
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+        ) {
+            Basket basket = (Basket) in.readObject();
+            basket.printCart();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
