@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        File textFile = new File("basket.txt");
+        File file = new File("basket.bin");
         Scanner scan = new Scanner(System.in);
         String[] products = {"молоко", "хлеб", "гречка"};
         int[] prices = {50, 14, 80};
@@ -28,12 +28,12 @@ public class Main {
             amount = Integer.parseInt(parts[1]);
             basket.addToCart(productNum, amount);
         }
-            if (!textFile.exists()) {
+            if (!file.exists()) {
                 basket.printCart();
-                basket.saveText(textFile);
+                basket.saveText(file);
             } else {
-                basket.saveText(textFile);
-                loadFromTxtFile(textFile);
+                basket.saveText(file);
+                loadFromTxtFile(file);
             }
         }
 
@@ -64,17 +64,6 @@ public class Main {
         }
         return basket;
     }
-    public static void loadFromBinFile(File file){
-        try(
-             ObjectInputStream in=new ObjectInputStream(new FileInputStream(file));
-           ){
-                Basket basket=(Basket) in.readObject();
-                basket.printCart();
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-        }catch (ClassNotFoundException e){
-            System.out.println(e.getMessage());
-        }
-    }
+
 }
 

@@ -1,8 +1,6 @@
 package ru.netology;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class Basket {
     private String[] products;
@@ -55,6 +53,18 @@ public class Basket {
                 writer.print(count + " ");
             }
         } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void loadFromBinFile(File file){
+        try(
+                ObjectInputStream in=new ObjectInputStream(new FileInputStream(file));
+        ){
+            Basket basket=(Basket) in.readObject();
+            basket.printCart();
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+        }catch (ClassNotFoundException e){
             System.out.println(e.getMessage());
         }
     }
