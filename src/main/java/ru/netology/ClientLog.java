@@ -45,7 +45,7 @@ public class ClientLog {
 
     public void addToCart(int productNum, int amount) {
         counts[productNum] += amount;
-        System.out.println(products[productNum] + " " + counts[productNum] + " шт по " + prices + " р/шт");
+        System.out.println(products[productNum] + " " + counts[productNum] + " шт по " + prices[productNum] + " р/шт");
     }
 
     public void printCart() {
