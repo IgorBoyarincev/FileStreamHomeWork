@@ -2,7 +2,7 @@ package ru.netology;
 
 import java.io.*;
 
-public class Basket {
+public class Basket implements Serializable {
     private String[] products;
     private int[] prices;
     private int[] counts;
@@ -39,8 +39,8 @@ public class Basket {
         System.out.println("итого: " + sum + " руб");
     }
 
-    public void saveText(File textFile) {
-        try (PrintWriter writer = new PrintWriter(textFile);) {
+    public void saveText(File file) {
+        try (PrintWriter writer = new PrintWriter(file);) {
             for (String product : products) {
                 writer.print(product + " ");
             }
@@ -56,19 +56,30 @@ public class Basket {
             System.out.println(e.getMessage());
         }
     }
-    
-    public static void loadFromBinFile(File file){
-        try(
-                ObjectInputStream in=new ObjectInputStream(new FileInputStream(file));
-        ){
-            Basket basket=(Basket) in.readObject();
-            basket.printCart();
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-        }catch (ClassNotFoundException e){
+
+    public void saveBin(File file) {
+        try (
+                ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file));
+        ) {
+            writer.writeObject(new Basket(products, prices, counts));
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void loadFromBinFile(File file) {
+        try (
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+        ) {
+            Basket basket = (Basket) in.readObject();
+            basket.printCart();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static Basket loadFromTxtFile(File textFile) {
         String[] products;
         int[] prices;

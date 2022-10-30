@@ -1,6 +1,6 @@
 package ru.netology;
 
-import java.io.*;
+import java.io.File;
 import java.util.Scanner;
 
 public class Main {
@@ -28,16 +28,14 @@ public class Main {
             amount = Integer.parseInt(parts[1]);
             basket.addToCart(productNum, amount);
         }
-            if (!file.exists()) {
-                basket.printCart();
-                basket.saveText(file);
-            } else {
-                basket.saveText(file);
-                loadFromTxtFile(file);
-            }
+        if (!file.exists()) {
+            basket.printCart();
+            basket.saveText(file);
+        } else {
+            basket.saveBin(file);
+            Basket.loadFromBinFile(file);
         }
-
-
+    }
 
 
 }
