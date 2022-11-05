@@ -109,25 +109,32 @@ public class ClientLog {
     }
 
     public static void loadFromJSONFile(File file) {
+        String[] products;
+        int[] prices;
+        int[] counts;
+        ClientLog cl = new ClientLog();
         JSONParser parser = new JSONParser();
         try {
             Object obj = parser.parse(new FileReader(file));
             JSONObject jsonObject = (JSONObject) obj;
-            System.out.println(jsonObject);
-            JSONArray jsonList = (JSONArray) jsonObject.get("products");
-            for (Object product : jsonList) {
-                System.out.print(product + " ");
+            //System.out.println(jsonObject);
+            JSONArray jsonListProducts = (JSONArray) jsonObject.get("products");
+            products = new String[jsonListProducts.size()];
+            for (int i = 0; i < products.length; i++) {
+                products[i] = String.valueOf(jsonListProducts.get(i));
             }
-            System.out.println();
-            jsonList = (JSONArray) jsonObject.get("prices");
-            for (Object price : jsonList) {
-                System.out.print(price + " ");
+            JSONArray jsonListPrices = (JSONArray) jsonObject.get("prices");
+            prices = new int[jsonListPrices.size()];
+            for (int i = 0; i < prices.length; i++) {
+                prices[i] = Integer.valueOf(jsonListPrices.get(i).toString());
             }
-            System.out.println();
-            jsonList = (JSONArray) jsonObject.get("counts");
-            for (Object count : jsonList) {
-                System.out.print(count + " ");
+            JSONArray jsonListCounts = (JSONArray) jsonObject.get("counts");
+            counts = new int[jsonListCounts.size()];
+            for (int i = 0; i < counts.length; i++) {
+                counts[i] = Integer.valueOf(jsonListCounts.get(i).toString());
             }
+            cl = new ClientLog(products, prices, counts);
+            cl.printCart();
         } catch (IOException | ParseException e) {
             System.out.println(e.getMessage());
         }
@@ -145,6 +152,4 @@ public class ClientLog {
     public String toString() {
         return productNum + " " + amount;
     }
-
-
 }
