@@ -1,11 +1,17 @@
 package ru.netology;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.*;
 
 public class Basket implements Serializable {
     private String[] products;
     private int[] prices;
     private int[] counts;
+    JSONObject obj = new JSONObject();
 
     public Basket(String[] products, int[] prices) {
         this.products = products;
@@ -56,17 +62,43 @@ public class Basket implements Serializable {
             System.out.println(e.getMessage());
         }
     }
-    public void saveBin(File file){
-        try(
-          ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(file));
-           ){
-            writer.writeObject(new Basket(products,prices,counts));
-        }catch(IOException e){
+
+    public void saveBin(File file) {
+        try (
+                ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file));
+        ) {
+            writer.writeObject(new Basket(products, prices, counts));
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    public void saveJsonFile(File file) {
+        JSONArray listCount = new JSONArray();
+        for (int count : counts) {
+            listCount.add(count);
+        }
+        obj.put("counts", listCount);
+        JSONArray listPrice = new JSONArray();
+        for (int price : prices) {
+            listPrice.add(price);
+        }
+        obj.put("prices", listPrice);
+        JSONArray listProduct = new JSONArray();
+        for (String product : products) {
+            listProduct.add(product);
+        }
+        obj.put("products", listProduct);
+        try (FileWriter writer = new FileWriter(file);) {
+            writer.write(obj.toJSONString());
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static Basket loadFromTxtFile(File textFile) {
-        String[] products=null;
+        String[] products = null;
         int[] prices;
         int[] counts;
         Basket basket = null;
@@ -92,15 +124,48 @@ public class Basket implements Serializable {
         }
         return basket;
     }
-    public static void loadFromBinFile(File file){
-        try(
-                ObjectInputStream in=new ObjectInputStream(new FileInputStream(file));
-        ){
-            Basket basket=(Basket) in.readObject();
+
+    public static void loadFromBinFile(File file) {
+        try (
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+        ) {
+            Basket basket = (Basket) in.readObject();
             basket.printCart();
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void loadFromJSONFile(File file) {
+        String[] products;
+        int[] prices;
+        int[] counts;
+        Basket basket = null;
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(new FileReader(file));
+            JSONObject jsonObject = (JSONObject) obj;
+            //System.out.println(jsonObject);
+            JSONArray jsonListProducts = (JSONArray) jsonObject.get("products");
+            products = new String[jsonListProducts.size()];
+            for (int i = 0; i < products.length; i++) {
+                products[i] = String.valueOf(jsonListProducts.get(i));
+            }
+            JSONArray jsonListPrices = (JSONArray) jsonObject.get("prices");
+            prices = new int[jsonListPrices.size()];
+            for (int i = 0; i < prices.length; i++) {
+                prices[i] = Integer.valueOf(jsonListPrices.get(i).toString());
+            }
+            JSONArray jsonListCounts = (JSONArray) jsonObject.get("counts");
+            counts = new int[jsonListCounts.size()];
+            for (int i = 0; i < counts.length; i++) {
+                counts[i] = Integer.valueOf(jsonListCounts.get(i).toString());
+            }
+            basket = new Basket(products, prices, counts);
+            basket.printCart();
+        } catch (IOException | ParseException e) {
             System.out.println(e.getMessage());
         }
     }

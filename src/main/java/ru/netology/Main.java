@@ -9,6 +9,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         String[] products = {"молоко", "хлеб", "гречка"};
         int[] prices = {50, 14, 80};
+        Basket basket = new Basket(products, prices);
         ClientLog cl = new ClientLog(products, prices);
         System.out.println("список продуктов для покупок: ");
         for (int i = 0; i < products.length; i++) {
@@ -26,17 +27,17 @@ public class Main {
             String[] parts = inputStr.split(" ");
             productNum = Integer.parseInt(parts[0]) - 1;
             amount = Integer.parseInt(parts[1]);
-            cl.addToCart(productNum, amount);
+            basket.addToCart(productNum, amount);
             cl.log(productNum, amount);
         }
         if (!file.exists()) {
-            cl.printCart();
-            cl.saveJsonFile(file);
+            basket.printCart();
+            basket.saveJsonFile(file);
             cl.exportAsCSV();
         } else {
             cl.exportAsCSV();
-            cl.saveJsonFile(file);
-            ClientLog.loadFromJSONFile(file);
+            basket.saveJsonFile(file);
+            Basket.loadFromJSONFile(file);
         }
     }
 
