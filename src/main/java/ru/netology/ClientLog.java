@@ -45,7 +45,7 @@ public class ClientLog {
     }
 
     public void exportAsCSV() {
-        try (Writer writer = new FileWriter("client.csv", true);) {
+        try (Writer writer = new FileWriter("basket.csv", true);) {
             ColumnPositionMappingStrategy<ClientLog> strategy = new ColumnPositionMappingStrategy<>();
             strategy.setType(ClientLog.class);
             strategy.setColumnMapping("productNum", "amount");
